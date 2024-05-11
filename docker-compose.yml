@@ -1,19 +1,13 @@
 version: '3.8'
 
 services:
-  server:
-    build:
-      context: ./server
+  app:
+    build: ./app
+    container_name: react_app
     ports:
-      - "3000:3000"
-    depends_on:
-      - mongodb
-
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "5173:5173"
+      - 3000:3000
+    stdin_open: true
+    tty: true
 
   mongodb:
     image: mongo
