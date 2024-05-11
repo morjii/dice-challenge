@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  api:
+    build: ./api
+    ports:
+      - 3001:3001
+    volumes:
+      - ./api:/usr/src/app
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+    depends_on:
+      - mongodb  # Changez "mongo" en "mongodb" pour correspondre au nom du service MongoDB
+      
   app:
     build: ./app
     container_name: react_app
