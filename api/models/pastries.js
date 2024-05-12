@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const pastrySchema = new mongoose.Schema({
+const pastrySchema = new Schema({
   name: String,
   image: String,
   stock: Number,
@@ -9,6 +9,6 @@ const pastrySchema = new mongoose.Schema({
 { collection: 'pastries' }
 )
 
-const Pastry = mongoose.model('Pastry', pastrySchema);
+const Pastry = model('Pastry', pastrySchema);
 
-module.exports = Pastry;
+export default Pastry;

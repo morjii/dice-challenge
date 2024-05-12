@@ -1,16 +1,33 @@
-import express from "express";
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+import authRoutes from './routes/authRoutes.js';
+import gameRoutes from './routes/gameRoutes.js';
+import pastryRoutes from './routes/pastryRoutes.js';
+import winnersRoutes from './routes/winnersRoutes.js';
 
 const app = express();
-const port = 3001;
+dotenv.config();
 
-// 1. Ajoutez une route d'accueil affichant un objet JSON contenant votre nom/prénom/age
-app.get("/home", (req, res) => {
-  res.send({
-    nom: 'CLERY',
-    prenom: 'Jean-Marie',
-    age: 35,
-  });
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/challenge-dice-db')
+.then(() => {
+  console.log('Connected to MongoDB');
+})
+.catch(err => {
+  console.error('Could not connect to MongoDB:', err);
 });
 
+app.use(cors());
+app.use(express.json());
 
-app.listen(port, () => console.log(`App démarrée sur http://localhost:${port}`));
+app.use('/api/auth', authRoutes);
+app.use('/api/game', gameRoutes);
+app.use('/api/pastries', pastryRoutes);
+app.use('/api/winners', winnersRoutes);
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const winnerSchema = new mongoose.Schema({
+const winnerSchema = new Schema({
   userName: { type: String, required: true},
   pastry: { type: Array, required: true },
   date : { type: Date, required: true },
@@ -9,6 +9,6 @@ const winnerSchema = new mongoose.Schema({
 { collection:'winners' }
 )
 
-const Winner = mongoose.model('Winner', winnerSchema);
+const Winner = model('Winner', winnerSchema);
 
-module.exports = Winner;
+export default Winner;
