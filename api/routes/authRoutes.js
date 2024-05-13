@@ -1,11 +1,15 @@
 import express from 'express';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 import User from '../models/users.js';
+import { Error } from 'mongoose';
 
 
 const router = express.Router();
+
+dotenv.config();
 
 // Inscription
 router.post('/register', async (req, res) => {
@@ -19,14 +23,17 @@ router.post('/register', async (req, res) => {
 
     // Hacher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword)
 
     // Créer un nouvel utilisateur
-    const user = new User({
+    const user = new User ({
       name,
       email,
       password: hashedPassword,
       chancesLeft: 3  // Initialise le nombre de tentatives de jeu
     });
+
+    console.log(user)
 
     // Sauvegarder l'utilisateur
     await user.save();
@@ -34,6 +41,7 @@ router.post('/register', async (req, res) => {
     // Répondre à la requête
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: "Error registering user", error: error });
   }
 });
@@ -64,6 +72,7 @@ router.post('/login', async (req, res) => {
     // Répondre avec le token
     res.json({ token });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: "Error logging in", error: error });
   }
 });

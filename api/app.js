@@ -11,7 +11,7 @@ import winnersRoutes from './routes/winnersRoutes.js';
 const app = express();
 dotenv.config();
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/challenge-dice-db')
+mongoose.connect('mongodb://localhost:27017/challenge-dice-db')
 .then(() => {
   console.log('Connected to MongoDB');
 })

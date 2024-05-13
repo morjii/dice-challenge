@@ -1,17 +1,21 @@
 // Fonction pour lancer les dés
-const rollDices = () => {
+export const rollDices = () => {
     // Générer un tableau de 5 nombres aléatoires entre 1 et 6
     return Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1);
   };
   
   // Fonction pour évaluer les résultats des dés
-  const evaluateDices = (dices) => {
+  export const evaluateDices = (dices) => {
     const counts = new Array(7).fill(0);
     dices.forEach(dice => counts[dice]++);
   
-    const isYam = counts.includes(5); // 5 dés identiques
-    const isCarre = counts.includes(4); // 4 dés identiques
-    const isDoublePair = counts.filter(count => count === 2).length === 2; // Deux paires
+    console.log("Counts of each dice side:", counts); // Afficher le décompte des dés
+  
+    const isYam = counts.some(count => count === 5); // Vérifie si 5 dés sont identiques
+    const isCarre = counts.some(count => count === 4); // Vérifie si 4 dés sont identiques
+    const isDoublePair = counts.filter(count => count === 2).length === 2; // Vérifie si deux paires sont présentes
+  
+    console.log(`Results - Yam: ${isYam}, Carré: ${isCarre}, Double Pair: ${isDoublePair}`); // Afficher les résultats
   
     if (isYam) {
       return { win: 'Yam\'s', pastriesWon: 3 };
@@ -24,9 +28,8 @@ const rollDices = () => {
     }
   };
   
-  // Export des fonctions pour les utiliser dans d'autres parties de l'application
+  // Exports pour les utiliser dans d'autres fichiers
   export default {
     rollDices,
     evaluateDices
   };
-  
