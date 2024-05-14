@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterView = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -16,6 +18,7 @@ const RegisterView = () => {
         password
       });
       setMessage('Registered successfully. Please log in.');
+      navigate('/login')
     } catch (error) {
       setMessage('Registration failed: ' + (error.response?.data?.message || error.message));
     }
