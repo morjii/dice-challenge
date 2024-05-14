@@ -53,7 +53,9 @@ const LoginView: React.FC = () => {
                     />
                 </div>
                 <button type="submit">Log In</button>
+            
             </form>
+            <a href="/register"> Pas encore inscrit ?</a>
         </div>
     );
 };

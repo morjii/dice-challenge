@@ -59,7 +59,9 @@ const RegisterView = () => {
           />
         </div>
         <button type="submit">Register</button>
+      
       </form>
+      <a href="/login"> Déjà inscrit ?</a>
       {message && <p>{message}</p>}
     </div>
   );
