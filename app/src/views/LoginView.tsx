@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const LoginView: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const navigate = useNavigate();
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -16,17 +17,31 @@ const LoginView: React.FC = () => {
             password
         });
      
-        console.log('Login successful:', response.data);
-        // Store the received token in localStorage or handle as needed
+        console.log('Connexion réussie:', response.data);
+        // Stocker le token dans le localStorage 
         localStorage.setItem('token', response.data.token);
 
-        // Navigate to another route upon successful login
+        // Naviguer vers la route du jeu
         navigate('/game');
     } catch (error) {
-        console.error('Login failed:', error);
-        // Implement error handling and display error messages
+        if (axios.isAxiosError(error) && error.response) {
+            setErrorMessage(error.response.data.message);
+        } else {
+            setErrorMessage("Une erreur s'est produite");
+        }
+        console.error('Connexion échouée:', error);
         }
     };
+
+    useEffect(() => {
+        axios.get('http://localhost:3001/pastries-left')
+            .then(res => {
+                if (res.data.totalLeft === 0) {
+                    navigate('/board');
+                }
+            })
+            .catch(err => console.error('Impossible de vérifier le stock de pâtisseries:', err));
+    }, []);
 
     return (
         <div className="login-container">
@@ -53,7 +68,7 @@ const LoginView: React.FC = () => {
                     />
                 </div>
                 <button type="submit">Log In</button>
-            
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
             </form>
             <a href="/register"> Pas encore inscrit ?</a>
         </div>

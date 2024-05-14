@@ -51,13 +51,13 @@ router.post('/login', async (req, res) => {
     // Trouver l'utilisateur par email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Utilisateur introuvable" });
     }
 
     // Vérifier le mot de passe
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Mot de passe incorrect" });
     }
 
     // Créer un JWT
@@ -71,7 +71,7 @@ router.post('/login', async (req, res) => {
     res.json({ token });
   } catch (error) {
     console.log(error)
-    res.status(500).json({ message: "Error logging in", error: error });
+    res.status(500).json({ message: "Erreur de connexion", error: error });
   }
 });
 
