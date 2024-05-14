@@ -11,6 +11,14 @@ const GameView = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        // Vérifier si l'utilisateur est connecté
+        if (!localStorage.getItem('token')) {
+            navigate('/'); // Rediriger vers HomeView si non connecté
+        }
+        checkPastriesLeft();
+    }, []); // Ajouté un tableau de dépendances vide pour exécuter une fois au montage
+
     const checkPastriesLeft = async () => {
         try {
             const response = await axios.get('http://localhost:3001/pastries-left');
@@ -21,10 +29,6 @@ const GameView = () => {
             console.error('Impossible de vérifier le stock de pâtisseries:', error);
         }
     };
-
-    useEffect(() => {
-        checkPastriesLeft();
-    }, [dices]); // Dépendance à dices pour vérifier après chaque lancer
 
     const rollDices = async () => {
         setLoading(true);
@@ -48,7 +52,6 @@ const GameView = () => {
         setLoading(false);
     };
 
-    
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/login');
@@ -82,13 +85,7 @@ const GameView = () => {
             )}
         </div>
     );
-
-
-
-
-
-
 };
 
-
 export default GameView;
+

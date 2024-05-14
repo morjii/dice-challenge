@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Winner } from '../types/apiTypes';
 import { useNavigate } from 'react-router-dom'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import style from '../App.css';
+
 
 const HomeView: React.FC = () => {
 
