@@ -47,36 +47,7 @@ router.get('/roll-dices', async (req, res) => {
 
         // attribuer les pastries de manière aléatoire 
 
-        // let pastriesSelected = [];
-
-        // async function selectRandomPastry() {
-        //     const pastries = await Pastry.find();
-        //     let pastriesInStock = [];
-        //     pastries.forEach(pastry => {
-        //         if (pastry.stock > 0){
-        //             pastriesInStock.push(pastry)
-        //         }
-        //     });
-
-        //     if(pastriesInStock.length == 0){
-        //         return null
-        //     };
-
-        //     const randomIndex = Math.floor(Math.random() * pastries.length);
-        
-        //     while(result.pastriesWon > 0){
-        //         pastriesSelected.push(pastries[randomIndex])
-        //     }
-
-        //     pastriesSelected.forEach(async pastrySelected => {
-        //         const pastry = await Pastry.findOne({name: pastrySelected.name})
-        //         pastry.stock--
-        //         pastry.quantityWon++
-            
-        //     })
-            
-        //     return pastriesSelected;
-        //   }
+     
 
         // ajout user dans winner si gagnant
         async function selectRandomPastry(result) {
@@ -92,7 +63,7 @@ router.get('/roll-dices', async (req, res) => {
                 const randomIndex = Math.floor(Math.random() * pastriesInStock.length);
                 const selectedPastry = pastriesInStock[randomIndex];
                 selectedPastry.stock--;
-                selectedPastry.quantityWon = (selectedPastry.quantityWon || 0) + 1;
+                selectedPastry.quantityWon++
                 await selectedPastry.save();
         
                 pastriesSelected.push(selectedPastry);
@@ -105,13 +76,6 @@ router.get('/roll-dices', async (req, res) => {
             return pastriesSelected;
         }
 
-        // const winner = await Winner.create({
-        //     userName: user.name,
-        //     //ajout pastry aleatoire
-        //     pastry: pastriesSelected,
-        //     date : new Date(),
-        //     number: result.pastriesWon,
-        // })
 
         const pastriesSelected = await selectRandomPastry(result);
 
@@ -125,9 +89,6 @@ if (pastriesSelected.length > 0) {
 }
 
         
-    
-
-
         res.json({
             status: 'success',
             dices: dices,

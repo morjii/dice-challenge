@@ -4,7 +4,7 @@ const pastrySchema = new Schema({
   name: String,
   image: String,
   stock: Number,
-  won: Number
+  quantityWon: Number
 },
 { collection: 'pastries' }
 )
