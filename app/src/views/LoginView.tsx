@@ -45,34 +45,41 @@ const LoginView: React.FC = () => {
 
     return (
         <div className="login-container">
-            <h1>Login</h1>
+            <h1>Connexion</h1>
             <form onSubmit={handleLogin}>
                 <div className="form-group">
-                    <label htmlFor="email">Email:</label>
+                    <label htmlFor="email" className="label">Adresse mail:</label>
                     <input
                         type="email"
                         id="email"
+                        className="input"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         required
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="password">Password:</label>
+                    <label htmlFor="password" className="label">Mot de passe:</label>
                     <input
                         type="password"
                         id="password"
+                        className="input"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         required
                     />
                 </div>
-                <button type="submit">Log In</button>
+                <button type="submit" className="button">Log In</button>
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
             </form>
-            <a href="/register"> Pas encore inscrit ?</a>
+            <div className="text-center mt-3">
+                <a href="/register">Pas encore inscrit ?</a>
+            </div>
         </div>
     );
+
+
+
 };
 
 export default LoginView;

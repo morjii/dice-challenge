@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Winner } from '../types/apiTypes';
-import { useNavigate } from 'react-router-dom'; // Assurez-vous d'importer useHistory de 'react-router-dom'
+import { useNavigate } from 'react-router-dom'; 
 
 const BoardView: React.FC = () => {
     const [winners, setWinners] = useState<Winner[]>([]);
@@ -18,21 +18,34 @@ const BoardView: React.FC = () => {
     console.log(winners)
 
     return (
-        <div>
-            <h1>Winners Board</h1>
-            { winners.length > 0 && (
-                <div>
-                    {winners.map((winner) => (
-                        <div>
-                            <p>Winner: {winner.userName}</p> 
-                            <p>Date: {winner.date}</p> 
-                            <p>Pâtisserie(s) gagnée(s): {winner.pastry}</p> 
+        <div className="container mt-5">
+            <h1 className="text-center mb-4">Gagnants du jeu concours :</h1>
+            {winners.length > 0 ? (
+                <div className="row">
+                    {winners.map((winner, index) => (
+                        <div key={index} className="col-md-4 mb-4">
+                            <div className="card h-100">
+                                <div className="card-header">
+                                    Gagnant: {winner.userName}
+                                </div>
+                                <div className="card-body">
+                                    <p className="card-text">Date de victoire: {new Date(winner.date).toLocaleDateString()}</p>
+                                    <p className="card-text">Pâtisserie(s) gagnée(s): {winner.pastry.join(", ")}</p>
+                                </div>
+                            </div>
                         </div>
                     ))}
+                </div>
+            ) : (
+                <div className="alert alert-info" role="alert">
+                    Pas de gagnants pour le moments
                 </div>
             )}
         </div>
     );
+
+
+
 };
 
 export default BoardView;

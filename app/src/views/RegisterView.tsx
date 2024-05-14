@@ -35,46 +35,55 @@ const RegisterView = () => {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
-      <form onSubmit={handleRegister}>
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+    <div className="register-container">
+        <h1>Inscription</h1>
+        <form onSubmit={handleRegister}>
+            <div className="form-group">
+                <label htmlFor="name">Nom:</label>
+                <input
+                    type="text"
+                    id="name"
+                    className="form-control"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    required
+                />
+            </div>
+            <div className="form-group">
+                <label htmlFor="email">Adresse mail:</label>
+                <input
+                    type="email"
+                    id="email"
+                    className="form-control"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                />
+            </div>
+            <div className="form-group">
+                <label htmlFor="password">Mot de passe:</label>
+                <input
+                    type="password"
+                    id="password"
+                    className="form-control"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    required
+                />
+            </div>
+            <div className="text-center">
+                <button type="submit" className="btn btn-success">Inscription</button>
+            </div>
+        </form>
+        <div className="text-center mt-3">
+            <a href="/login">Déjà inscrit ?</a>
         </div>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Register</button>
-      
-      </form>
-      <a href="/login"> Déjà inscrit ?</a>
-      {message && <p>{message}</p>}
+        {message && <div className="alert alert-danger mt-3">{message}</div>}
     </div>
-  );
+);
+
+
+
 };
 
 export default RegisterView;

@@ -4,6 +4,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/material": "^5.15.17",
     "axios": "^1.6.8",
-    "bcryptjs": "^2.4.3"
+    "bcryptjs": "^2.4.3",
+    "bootstrap": "^5.3.3"
   }
 }

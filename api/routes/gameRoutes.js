@@ -11,6 +11,7 @@ dotenv.config()
 const router = Router();
 const { rollDices, evaluateDices } = gameUtils;
 
+
 // Route pour lancer les dés
 router.get('/roll-dices', async (req, res) => {
     const token = req.headers['x-access-token'];

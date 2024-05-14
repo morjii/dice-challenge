@@ -48,22 +48,46 @@ const GameView = () => {
         setLoading(false);
     };
 
+    
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
+    };
+
     return (
-        <div>
-            <h1>Game View</h1>
-            <button onClick={rollDices} disabled={loading}>
+        <div className="game-view-container">
+            <header className="game-header">
+                <h1>Let's Play the Dice Game!</h1>
+                <button onClick={handleLogout} className="logout-button">Logout</button>
+            </header>
+            <button className="roll-button" onClick={rollDices} disabled={loading}>
                 {loading ? 'Rolling...' : 'Roll Dices'}
             </button>
             {dices.length > 0 && (
-                <div>
+                <div className="results-container">
                     <h2>Dice Rolls: {dices.join(', ')}</h2>
                     <p>Result: {result}</p>
-                    <p>Pastries won: {pastriesWon}</p>
+                    {pastriesWon.length > 0 && (
+                        <div>
+                            <h3>Congratulations, you won:</h3>
+                            {pastriesWon.map(pastry => (
+                                <div key={pastry.name} className="pastry">
+                                    <img src={`/assets/${pastry.image}`} alt={pastry.name} />
+                                    <p>{pastry.name}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
-            {message && <p>{message}</p>}
         </div>
     );
+
+
+
+
+
+
 };
 
 
