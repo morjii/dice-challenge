@@ -14,7 +14,7 @@ function App() {
         <Route path="/login" element={<LoginView />} />
         <Route path="/register" element={<RegisterView />} />
         <Route path="/game" element={<GameView />} />
-        <Route path="/winners" element={<BoardView />} />
+        <Route path="/board" element={<BoardView />} />
         <Route path="/" element={<HomeView />} />
       </Routes>
     </Router>

@@ -5,63 +5,34 @@ import { useNavigate } from 'react-router-dom'; // Assurez-vous d'importer useHi
 
 const BoardView: React.FC = () => {
     const [winners, setWinners] = useState<Winner[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [gameEnded, setGameEnded] = useState(false);
-    const history = useNavigate(); // Utilisez useHistory pour la redirection
 
     useEffect(() => {
-        const fetchGameStatus = async () => {
-            try {
-                const response = await axios.get<{ gameEnded: boolean }>('http://localhost:3001/api/game/check-game-end');
-                setGameEnded(response.data.gameEnded);
-                if (!response.data.gameEnded) {
-                    history('/'); // Redirige vers la page d'accueil si le jeu n'est pas terminé
-                }
-            } catch (err) {
-                console.error('Failed to check game status:', err);
+        fetch('http://localhost:3001/board')
+        .then(res => res.json())
+        .then(
+            (result) => {
+                setWinners(result);
             }
-        };
-
-        fetchGameStatus();
-        if (gameEnded) {
-            const fetchWinners = async () => {
-                try {
-                    const response = await axios.get<Winner[]>('http://localhost:3001/api/winners');
-                    setWinners(response.data);
-                    setLoading(false);
-                } catch (err: any) {
-                    setError('Failed to fetch winners: ' + err.message);
-                    setLoading(false);
-                }
-            };
-            fetchWinners();
-        }
-    }, [gameEnded, history]);
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+        )
+    }, []);
+    console.log(winners)
 
     return (
         <div>
             <h1>Winners Board</h1>
-            <p>The game has ended. Here are the results:</p>
-            <ul>
-                {winners.map((winner) => (
-                    <li key={winner.user.id}>
-                        <h2>{winner.user.name}</h2>
-                        <p>Won at: {new Date(winner.winDate).toLocaleString()}</p>
-                        <p>Pastries won:</p>
-                        <ul>
-                            {winner.pastries.map(pastry => (
-                                <li key={pastry.id}>
-                                    {pastry.name} - Stock left: {pastry.stock}
-                                </li>
-                            ))}
-                        </ul>
-                    </li>
-                ))}
-            </ul>
+            { winners.length > 0 && (
+                <div>
+                    {winners.map((winner) => (
+                        <div>
+                            <p>Winner: {winner.userName}</p> 
+                            <p>Date: {winner.date}</p> 
+                            <p>Pâtisserie(s) gagnée(s): {winner.pastry}</p> 
+                        </div>
+                        
+                    ))}
+
+                </div>
+            )}
         </div>
     );
 };

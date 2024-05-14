@@ -25,7 +25,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/game', gameRoutes);
 app.use('/api/pastries', pastryRoutes);
-app.use('/api/winners', winnersRoutes);
+app.use('/', winnersRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
