@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginView from './views/LoginView';
 import RegisterView from './views/RegisterView';
 import GameView from './views/GameView';
-import BoardView from './views/boardView';
+import BoardView from './views/BoardView';
 
 
 function App() {

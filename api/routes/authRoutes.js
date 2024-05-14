@@ -4,8 +4,8 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 import User from '../models/users.js';
+import Pastry from '../models/pastries.js'; // Ensure you have this import to access the Pastry model
 import { Error } from 'mongoose';
-
 
 const router = express.Router();
 
@@ -13,8 +13,9 @@ dotenv.config();
 
 // Inscription
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
   try {
+    const { name, email, password } = req.body;
+
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -23,17 +24,14 @@ router.post('/register', async (req, res) => {
 
     // Hacher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword)
 
     // Créer un nouvel utilisateur
-    const user = new User ({
+    const user = new User({
       name,
       email,
       password: hashedPassword,
       chancesLeft: 3  // Initialise le nombre de tentatives de jeu
     });
-
-    console.log(user)
 
     // Sauvegarder l'utilisateur
     await user.save();
@@ -41,7 +39,7 @@ router.post('/register', async (req, res) => {
     // Répondre à la requête
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ message: "Error registering user", error: error });
   }
 });
