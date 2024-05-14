@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'; // Assurez-vous d'importer useHi
 const HomeView: React.FC = () => {
 
     const navigate = useNavigate();
+    const[ isStockEmpty, setIsStockEmpty] = useState(false);
 
     function register(){ 
         navigate('/register')
@@ -15,12 +16,29 @@ const HomeView: React.FC = () => {
         navigate('/login')
      }
 
+     useEffect(() => {
+        fetch('http://localhost:3001/pastries-left')
+        .then(res => res.json())
+        .then(
+            (result) => {
+                console.log(result)
+                if(result.totalLeft == 0){ 
+                    navigate('/board') ;}
+            }
+        )
+    }, []);
+
 
     return (
         <div>
-            <h1>Winners Board</h1>
-                <button onClick={register}> Register </button>
-                <button onClick={login}> Login </button>
+           
+            
+                    <h1>Welcome</h1>
+            
+                        <button onClick={register}> Register </button>
+                        <button onClick={login}> Login </button>
+              
+        
         </div>
     );
 };

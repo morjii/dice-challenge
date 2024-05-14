@@ -28,9 +28,7 @@ const BoardView: React.FC = () => {
                             <p>Date: {winner.date}</p> 
                             <p>Pâtisserie(s) gagnée(s): {winner.pastry}</p> 
                         </div>
-                        
                     ))}
-
                 </div>
             )}
         </div>
