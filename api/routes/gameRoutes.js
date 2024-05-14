@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import gameUtils from '../utils/gameUtils.js';
 import User from '../models/users.js';
 import Pastry from '../models/pastries.js'; // Ensure you have this import to access the Pastry model
-
+import Winner from '../models/winners.js';
 
 dotenv.config()
 
@@ -38,11 +38,101 @@ router.get('/roll-dices', async (req, res) => {
         const dices = rollDices();
         const result = evaluateDices(dices);
 
+        // enlever les chances si gagnant
+
+        if(result.pastriesWon > 0) {
+            user.chancesLeft = 0;
+            await user.save();
+        }
+
+        // attribuer les pastries de manière aléatoire 
+
+        // let pastriesSelected = [];
+
+        // async function selectRandomPastry() {
+        //     const pastries = await Pastry.find();
+        //     let pastriesInStock = [];
+        //     pastries.forEach(pastry => {
+        //         if (pastry.stock > 0){
+        //             pastriesInStock.push(pastry)
+        //         }
+        //     });
+
+        //     if(pastriesInStock.length == 0){
+        //         return null
+        //     };
+
+        //     const randomIndex = Math.floor(Math.random() * pastries.length);
+        
+        //     while(result.pastriesWon > 0){
+        //         pastriesSelected.push(pastries[randomIndex])
+        //     }
+
+        //     pastriesSelected.forEach(async pastrySelected => {
+        //         const pastry = await Pastry.findOne({name: pastrySelected.name})
+        //         pastry.stock--
+        //         pastry.quantityWon++
+            
+        //     })
+            
+        //     return pastriesSelected;
+        //   }
+
+        // ajout user dans winner si gagnant
+        async function selectRandomPastry(result) {
+            const pastries = await Pastry.find();
+            let pastriesInStock = pastries.filter(pastry => pastry.stock > 0);
+        
+            if (pastriesInStock.length === 0) {
+                return [];
+            }
+        
+            let pastriesSelected = [];
+            while (result.pastriesWon > 0 && pastriesInStock.length > 0) {
+                const randomIndex = Math.floor(Math.random() * pastriesInStock.length);
+                const selectedPastry = pastriesInStock[randomIndex];
+                selectedPastry.stock--;
+                selectedPastry.quantityWon = (selectedPastry.quantityWon || 0) + 1;
+                await selectedPastry.save();
+        
+                pastriesSelected.push(selectedPastry);
+                result.pastriesWon--;
+        
+                // Refresh the list of pastries in stock
+                pastriesInStock = pastriesInStock.filter(pastry => pastry.stock > 0);
+            }
+        
+            return pastriesSelected;
+        }
+
+        // const winner = await Winner.create({
+        //     userName: user.name,
+        //     //ajout pastry aleatoire
+        //     pastry: pastriesSelected,
+        //     date : new Date(),
+        //     number: result.pastriesWon,
+        // })
+
+        const pastriesSelected = await selectRandomPastry(result);
+
+if (pastriesSelected.length > 0) {
+    const winner = await Winner.create({
+        userName: user.name,
+        pastry: pastriesSelected.map(pastry => pastry.name),
+        date: new Date(),
+        number: pastriesSelected.length
+    });
+}
+
+        
+    
+
+
         res.json({
             status: 'success',
             dices: dices,
             result: result.win,
-            pastriesWon: result.pastriesWon,
+            pastriesWon: pastriesSelected.length,
             chancesLeft: user.chancesLeft
             // Include the remaining chances in the response
         });

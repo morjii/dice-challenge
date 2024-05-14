@@ -1,7 +1,8 @@
 // Fonction pour lancer les dés
 export const rollDices = () => {
   // Générer un tableau de 5 nombres aléatoires entre 1 et 6
-  return Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1);
+  //return Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1);
+  return [1,1,1,1,1];
 };
 
 // Fonction pour évaluer les résultats des dés
@@ -27,6 +28,12 @@ export const evaluateDices = (dices) => {
     return { win: 'No Win', pastriesWon: 0 };
   }
 };
+
+// si le user gagne une/des patisseries, 
+//le mettre dans la tab winners + chancesLeft = 0 et
+// décrementer dans le tableau des patisseries
+
+
 
 // Exports pour les utiliser dans d'autres fichiers
 export default {
