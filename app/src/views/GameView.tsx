@@ -19,6 +19,9 @@ const GameView = () => {
             navigate('/'); // Rediriger vers HomeView si non connecté
         }
         checkPastriesLeft();
+        if (chancesLeft === 0) {
+            setMessage('Dommage, tu n\'as plus de chance');
+        }
     }, []); // Ajouté un tableau de dépendances vide pour exécuter une fois au montage
 
     const checkPastriesLeft = async () => {
@@ -46,11 +49,14 @@ const GameView = () => {
             setResult(response.data.result);
             setPastriesWon(response.data.pastriesWon);
             setPastriesDetails(response.data.pastriesDetails);
+            setChancesLeft(prev => prev - 1);
 
-            setMessage(`You rolled: ${response.data.dices.join(', ')}. Result: ${response.data.result}. Pastries won: ${response.data.pastriesWon}. Pastries Details: ${pastriesDetails}`);
+            if (response.data.pastriesWon === 0 && chancesLeft <= 1) {
+                setMessage('Dommage, tu n\'as plus de chance');
+            }
         } catch (error) {
             console.log(error);
-            setMessage('Failed to roll dices: ' + (error.response?.data?.message || error.message));
+            setMessage("Les dés n'ont pas pu être lancés..." + (error.response?.data?.message || error.message));
         }
         setLoading(false);
     };
@@ -70,9 +76,10 @@ const GameView = () => {
                 <h1>Lancez les dés </h1>
                 <button onClick={handleLogout} className="logout-button">Déconnexion</button>
             </header>
-            <button className="roll-button" onClick={rollDices} disabled={loading}>
+            <button className="roll-button" onClick={rollDices} disabled={loading || chancesLeft === 0}>
                 {loading ? 'Lancement...' : 'Lancez les dés'}
             </button>
+            {message && <p>{message}</p>}
             {dices.length > 0 && (
                 <div className="results-container">
                     <h2>Résultat: {dices.join(', ')}</h2>

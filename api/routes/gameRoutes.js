@@ -28,7 +28,7 @@ router.get('/roll-dices', async (req, res) => {
         if (user.chancesLeft <= 0) {
             return res.status(400).json({
                 status: 'error',
-                message: 'No more chances left to play.'
+                message: "Dommage ! Tu n'as plus de chances"
             });
         }
 
