@@ -38,7 +38,7 @@ const BoardView: React.FC = () => {
                 </div>
             ) : (
                 <div className="alert alert-info" role="alert">
-                    Pas de gagnants pour le moments
+                    Pas de gagnants pour le moment
                 </div>
             )}
         </div>

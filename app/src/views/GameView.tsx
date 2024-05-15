@@ -115,11 +115,9 @@ const GameView = () => {
             {message && <p>{message}</p>}
             {showResults && dices.length > 0 && (
                 <div className="results-container">
-                    <h2>Résultat: {dices.join(', ')}</h2>
-                    <p>{result}</p>
                     {pastriesWon > 0 && (
                         <div>
-                            <h3>Bravo tu as gagné les pâtisseries suivantes :</h3>
+                            <h3>Bravo tu as gagné la/les pâtisserie(s) suivante(s) :</h3>
                             {pastriesDetails.map((pastry) => (
                                 <div key={pastry.name} className="pastry">
                                     <img src={`/assets/${pastry.image}`} alt={pastry.name} style={{ width: '100px', height: '100px' }} />
