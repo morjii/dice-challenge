@@ -33,6 +33,8 @@ router.post('/register', async (req, res) => {
       chancesLeft: 3  // Initialise le nombre de tentatives de jeu
     });
 
+    
+
     // Sauvegarder l'utilisateur
     await user.save();
 
@@ -68,11 +70,12 @@ router.post('/login', async (req, res) => {
     );
 
     // Répondre avec le token
-    res.json({ token });
+    res.json({ token:token, email: user.email, chancesLeft: user.chancesLeft, pastriesWon: user.pastriesWon});
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: "Erreur de connexion", error: error });
   }
 });
+
 
 export default router;

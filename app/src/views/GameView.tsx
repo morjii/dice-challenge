@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteUser } from '../redux/User'
 
 
 const GameView = () => {
@@ -12,6 +14,7 @@ const GameView = () => {
     const [loading, setLoading] = useState(false);
     const [pastriesDetails, setPastriesDetails] = useState([]);
     const navigate = useNavigate();
+    const dispatch = useDispatch(); 
 
     useEffect(() => {
         // Vérifier si l'utilisateur est connecté
@@ -67,6 +70,7 @@ const GameView = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        dispatch(deleteUser())
         navigate('/login');
     };
 

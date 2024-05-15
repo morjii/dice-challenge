@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../redux/User'
 
 const LoginView: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault(); // Prevent default form submission
@@ -16,12 +19,14 @@ const LoginView: React.FC = () => {
             email,
             password
         });
+
      
         console.log('Connexion réussie:', response.data);
-        // Stocker le token dans le localStorage 
+        // Store the token in localStorage
         localStorage.setItem('token', response.data.token);
+        dispatch(addUser({ email: response.data.email, name: response.data.name, token: response.data.token, chancesLeft: response.data.chancesLeft, pastriesWon: response.data.pastriesWon}))
 
-        // Naviguer vers la route du jeu
+        // Navigate to the game route
         navigate('/game');
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
