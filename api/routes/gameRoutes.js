@@ -95,7 +95,8 @@ if (pastriesSelected.length > 0) {
             dices: dices,
             result: result.win,
             pastriesWon: pastriesSelected.length,
-            chancesLeft: user.chancesLeft
+            chancesLeft: user.chancesLeft,
+            pastriesDetails: pastriesSelected
             // Include the remaining chances in the response
         });
     } catch (error) {

@@ -29,14 +29,38 @@ export const evaluateDices = (dices) => {
   }
 };
 
-// si le user gagne une/des patisseries, 
-//le mettre dans la tab winners + chancesLeft = 0 et
-// décrementer dans le tableau des patisseries
+import Pastry from '../models/pastries.js'; // Assurez-vous d'importer le modèle Pastry
 
+// Fonction pour sélectionner des pâtisseries de manière aléatoire
+export const selectRandomPastry = async (result) => {
+    const pastries = await Pastry.find();
+    let pastriesInStock = pastries.filter(pastry => pastry.stock > 0);
 
+    if (pastriesInStock.length === 0) {
+        return [];
+    }
+
+    let pastriesSelected = [];
+    while (result.pastriesWon > 0 && pastriesInStock.length > 0) {
+        const randomIndex = Math.floor(Math.random() * pastriesInStock.length);
+        const selectedPastry = pastriesInStock[randomIndex];
+        selectedPastry.stock--;
+        selectedPastry.quantityWon++
+        await selectedPastry.save();
+
+        pastriesSelected.push(selectedPastry);
+        result.pastriesWon--;
+
+        // Refresh the list of pastries in stock
+        pastriesInStock = pastriesInStock.filter(pastry => pastry.stock > 0);
+    }
+
+    return pastriesSelected;
+};
 
 // Exports pour les utiliser dans d'autres fichiers
 export default {
   rollDices,
-  evaluateDices
+  evaluateDices,
+  selectRandomPastry 
 };

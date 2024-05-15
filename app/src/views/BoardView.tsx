@@ -19,7 +19,7 @@ const BoardView: React.FC = () => {
 
     return (
         <div className="container mt-5">
-            <h1 className="text-center mb-4">Gagnants du jeu concours :</h1>
+            <h1 className="text-center mb-4">Fin du jeu concours : Félicitations aux gagnants !</h1>
             {winners.length > 0 ? (
                 <div className="row">
                     {winners.map((winner, index) => (

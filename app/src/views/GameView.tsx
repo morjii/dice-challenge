@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+
 const GameView = () => {
     const [dices, setDices] = useState([]);
     const [result, setResult] = useState('');
@@ -9,6 +10,7 @@ const GameView = () => {
     const [chancesLeft, setChancesLeft] = useState(3); 
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const [pastriesDetails, setPastriesDetails] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,14 +45,19 @@ const GameView = () => {
             setDices(response.data.dices);
             setResult(response.data.result);
             setPastriesWon(response.data.pastriesWon);
+            setPastriesDetails(response.data.pastriesDetails);
 
-            setMessage(`You rolled: ${response.data.dices.join(', ')}. Result: ${response.data.result}. Pastries won: ${response.data.pastriesWon}`);
+            setMessage(`You rolled: ${response.data.dices.join(', ')}. Result: ${response.data.result}. Pastries won: ${response.data.pastriesWon}. Pastries Details: ${pastriesDetails}`);
         } catch (error) {
             console.log(error);
             setMessage('Failed to roll dices: ' + (error.response?.data?.message || error.message));
         }
         setLoading(false);
     };
+
+    console.log("Dices:", dices);
+    console.log("Pastries Won:", pastriesWon);
+    console.log("Pastries Details:", pastriesDetails);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -60,23 +67,24 @@ const GameView = () => {
     return (
         <div className="game-view-container">
             <header className="game-header">
-                <h1>Let's Play the Dice Game!</h1>
-                <button onClick={handleLogout} className="logout-button">Logout</button>
+                <h1>Lancez les dés </h1>
+                <button onClick={handleLogout} className="logout-button">Déconnexion</button>
             </header>
             <button className="roll-button" onClick={rollDices} disabled={loading}>
-                {loading ? 'Rolling...' : 'Roll Dices'}
+                {loading ? 'Lancement...' : 'Lancez les dés'}
             </button>
             {dices.length > 0 && (
                 <div className="results-container">
-                    <h2>Dice Rolls: {dices.join(', ')}</h2>
-                    <p>Result: {result}</p>
-                    {pastriesWon.length > 0 && (
+                    <h2>Résultat: {dices.join(', ')}</h2>
+                    <p>{result}</p>
+                    {pastriesWon > 0 && (
                         <div>
-                            <h3>Congratulations, you won:</h3>
-                            {pastriesWon.map(pastry => (
+                            <h3>Bravo tu as gagné les pâtisseries suivantes :</h3>
+                            {pastriesDetails.map((pastry: { name: string; image: string }) => (
                                 <div key={pastry.name} className="pastry">
-                                    <img src={`/assets/${pastry.image}`} alt={pastry.name} />
+                                    <img src={`/assets/${pastry.image}`} alt={pastry.name} style={{ width: '100px', height: '100px' }} />
                                     <p>{pastry.name}</p>
+        
                                 </div>
                             ))}
                         </div>
