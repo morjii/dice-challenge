@@ -1,31 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteUser } from '../redux/User'
-
+import { useDispatch } from 'react-redux';
+import { deleteUser } from '../redux/User';
+import gsap from 'gsap';
+import './GameView.css';
 
 const GameView = () => {
-    const [dices, setDices] = useState([]);
+    const [dices, setDices] = useState([0, 0, 0, 0, 0]);
+    const [loading, setLoading] = useState(false);
     const [result, setResult] = useState('');
     const [pastriesWon, setPastriesWon] = useState(0);
-    const [chancesLeft, setChancesLeft] = useState(3); 
-    const [message, setMessage] = useState('');
-    const [loading, setLoading] = useState(false);
     const [pastriesDetails, setPastriesDetails] = useState([]);
+    const [chancesLeft, setChancesLeft] = useState(3);
+    const [message, setMessage] = useState('');
     const navigate = useNavigate();
-    const dispatch = useDispatch(); 
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        // Vérifier si l'utilisateur est connecté
         if (!localStorage.getItem('token')) {
-            navigate('/'); // Rediriger vers HomeView si non connecté
+            navigate('/');
         }
         checkPastriesLeft();
-        if (chancesLeft === 0) {
-            setMessage('Dommage, tu n\'as plus de chance');
-        }
-    }, []); // Ajouté un tableau de dépendances vide pour exécuter une fois au montage
+    }, []);
 
     const checkPastriesLeft = async () => {
         try {
@@ -40,7 +37,6 @@ const GameView = () => {
 
     const rollDices = async () => {
         setLoading(true);
-        setMessage('');
         try {
             const response = await axios.get('http://localhost:3001/api/game/roll-dices', {
                 headers: {
@@ -53,58 +49,85 @@ const GameView = () => {
             setPastriesWon(response.data.pastriesWon);
             setPastriesDetails(response.data.pastriesDetails);
             setChancesLeft(prev => prev - 1);
-
-            if (response.data.pastriesWon === 0 && chancesLeft <= 1) {
-                setMessage('Dommage, tu n\'as plus de chance');
-            }
+            setMessage(response.data.pastriesWon === 0 && chancesLeft <= 1 ? 'Dommage, tu n\'as plus de chance' : '');
         } catch (error) {
             console.log(error);
             setMessage("Les dés n'ont pas pu être lancés..." + (error.response?.data?.message || error.message));
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
-
-    console.log("Dices:", dices);
-    console.log("Pastries Won:", pastriesWon);
-    console.log("Pastries Details:", pastriesDetails);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
-        dispatch(deleteUser())
+        dispatch(deleteUser());
         navigate('/login');
     };
 
-    return (
-        <div className="game-view-container">
-            <header className="game-header">
-                <h1>Lancez les dés </h1>
-                <button onClick={handleLogout} className="logout-button">Déconnexion</button>
-            </header>
-            <button className="roll-button" onClick={rollDices} disabled={loading || chancesLeft === 0}>
-                {loading ? 'Lancement...' : 'Lancez les dés'}
-            </button>
-            {message && <p>{message}</p>}
-            {dices.length > 0 && (
-                <div className="results-container">
-                    <h2>Résultat: {dices.join(', ')}</h2>
-                    <p>{result}</p>
-                    {pastriesWon > 0 && (
-                        <div>
-                            <h3>Bravo tu as gagné les pâtisseries suivantes :</h3>
-                            {pastriesDetails.map((pastry: { name: string; image: string }) => (
-                                <div key={pastry.name} className="pastry">
-                                    <img src={`/assets/${pastry.image}`} alt={pastry.name} style={{ width: '100px', height: '100px' }} />
-                                    <p>{pastry.name}</p>
+    function launch() {
+        if (chancesLeft > 0) {
+            rollDices();
+        }
+    }
+
+    function Dice({ value }) {
+        const diceRef = useRef(null);
+
+        useLayoutEffect(() => {
+            const ctx = gsap.context(() => {
+                gsap.from(diceRef.current, {
+                    rotationX: 'random(720, 1080)',
+                    rotationY: 'random(720, 1080)',
+                    duration: 'random(2, 3)'
+                });
+            }, diceRef);
+            return () => ctx.revert();
+        }, [value]);
+
+        return (
+            <div className="dice" ref={diceRef}>
+                {[value, ...gsap.utils.shuffle([1, 2, 3, 4, 5, 6].filter(v => v !== value))].map((face, index) => (
+                    <div key={index} className="face">{face}</div>
+                    ))}
+                    </div>
+                );
+            }
         
+            return (
+                <div className="game-view-container">
+                    <header className="game-header">
+                        <h1>Lancez les dés</h1>
+                    </header>
+                    <div className="dice-container">
+                        {dices.map((dice, index) => <Dice key={index} value={dice} />)}
+                        <p>{result}</p>
+                    </div>
+                    <div className="actions">
+                        <button onClick={launch} disabled={loading || chancesLeft === 0}>
+                            {loading ? 'Lancement...' : 'Lancez les dés'}
+                        </button>
+                    </div>
+                    {message && <p>{message}</p>}
+                    {dices.length > 0 && (
+                        <div className="results-container">                    
+                            {pastriesWon > 0 && (
+                                <div>
+                                    <h3>Bravo tu as gagné les pâtisseries suivantes :</h3>
+                                    {pastriesDetails.map((pastry) => (
+                                        <div key={pastry.name} className="pastry">
+                                            <img src={`/assets/${pastry.image}`} alt={pastry.name} style={{ width: '100px', height: '100px' }} />
+                                            <p>{pastry.name}</p>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            )}
                         </div>
                     )}
+                    <footer><
+                        button onClick={handleLogout} className="logout-button">Déconnexion</button>
+                        </footer>
                 </div>
-            )}
-        </div>
-    );
-};
-
-export default GameView;
-
+            );
+        };
+        
+        export default GameView;
