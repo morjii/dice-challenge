@@ -1,8 +1,8 @@
 // Fonction pour lancer les dés
 export const rollDices = () => {
   // Générer un tableau de 5 nombres aléatoires entre 1 et 6
-  //return Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1);
-  return [1,1,1,1,1];
+  return Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1);
+  //return [1,1,1,1,1];
 };
 
 // Fonction pour évaluer les résultats des dés
