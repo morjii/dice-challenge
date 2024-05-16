@@ -29,6 +29,7 @@ id: user.id,
 email: user.email
 };
 try {
+
 return jwt.sign(payload, secretSignature, options);
 } catch (error) {
 console.error('Error generating JWT:', error);

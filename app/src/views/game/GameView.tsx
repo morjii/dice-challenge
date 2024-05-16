@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { deleteUser } from '../redux/User';
-import { DiceProps } from '../types/apiTypes';
+import { deleteUser } from '../../redux/User';
+import { DiceProps } from '../../types/apiTypes';
 
 import gsap from 'gsap';
 import './GameView.css';

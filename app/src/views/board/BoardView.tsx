@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Winner } from '../types/apiTypes';
-import { useNavigate } from 'react-router-dom'; 
+import { Winner } from '../../types/apiTypes';
 
 const BoardView: React.FC = () => {
     const [winners, setWinners] = useState<Winner[]>([]);

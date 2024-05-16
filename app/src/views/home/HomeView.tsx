@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Winner } from '../types/apiTypes';
+import { Winner } from '../../types/apiTypes';
 import { useNavigate } from 'react-router-dom'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './HomeView.css'
@@ -40,6 +40,7 @@ const HomeView: React.FC = () => {
         .then(
             (result) => {
                 console.log(result)
+                // redirection board
                 if(result.totalLeft == 0){ 
                     navigate('/board') ;}
             }

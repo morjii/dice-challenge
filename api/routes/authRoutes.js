@@ -34,7 +34,6 @@ router.post('/register', async (req, res) => {
     });
 
     
-
     // Sauvegarder l'utilisateur
     await user.save();
 
@@ -62,7 +61,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: "Mot de passe incorrect" });
     }
 
-    // Créer un JWT
+    // Créer un token JWT
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET,

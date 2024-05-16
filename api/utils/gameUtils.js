@@ -1,3 +1,7 @@
+import Pastry from '../models/pastries.js'; 
+
+
+
 // Fonction pour lancer les dés
 export const rollDices = () => {
   // Générer un tableau de 5 nombres aléatoires entre 1 et 6
@@ -7,6 +11,7 @@ export const rollDices = () => {
 
 // Fonction pour évaluer les résultats des dés
 export const evaluateDices = (dices) => {
+
   const counts = new Array(7).fill(0);
   dices.forEach(dice => counts[dice]++);
 
@@ -29,7 +34,6 @@ export const evaluateDices = (dices) => {
   }
 };
 
-import Pastry from '../models/pastries.js'; // Assurez-vous d'importer le modèle Pastry
 
 // Fonction pour sélectionner des pâtisseries de manière aléatoire
 export const selectRandomPastry = async (result) => {
@@ -51,14 +55,13 @@ export const selectRandomPastry = async (result) => {
         pastriesSelected.push(selectedPastry);
         result.pastriesWon--;
 
-        // Refresh the list of pastries in stock
+        // Màj des patisseries en stock
         pastriesInStock = pastriesInStock.filter(pastry => pastry.stock > 0);
     }
 
     return pastriesSelected;
 };
 
-// Exports pour les utiliser dans d'autres fichiers
 export default {
   rollDices,
   evaluateDices,

@@ -4,7 +4,7 @@ import Winner from '../models/winners.js';
 
 const router = express.Router();
 
-// Route pour obtenir la liste de tous les gagnants
+// recupère et renvoie la liste de tous les gagnants
 router.get('/board', async (req, res) => {
     try {
         const winners = await Winner.find();

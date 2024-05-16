@@ -46,10 +46,8 @@ router.get('/roll-dices', async (req, res) => {
             await user.save();
         }
 
-        // attribuer les pastries de manière aléatoire 
-
      
-
+         // attribuer les pastries de manière aléatoire 
         // ajout user dans winner si gagnant
         async function selectRandomPastry(result) {
             const pastries = await Pastry.find();
