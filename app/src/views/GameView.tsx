@@ -37,11 +37,9 @@ const GameView = () => {
         }
     };
 
-    //fonction get renvoie à l'api pour check les résultats des dés
-
     const rollDices = async () => {
         setLoading(true);
-        setShowResults(false); // reset showResults au relancement des dés
+        setShowResults(false); // Reset showResults quand on lance de nouveaux dés
         try {
             const response = await axios.get('http://localhost:3001/api/game/roll-dices', {
                 headers: {
@@ -55,18 +53,24 @@ const GameView = () => {
             setPastriesDetails(response.data.pastriesDetails);
             setChancesLeft(prev => prev - 1);
 
-            // afficher les résultats à la fin de l'animation
+            // attendre que l'animation se finissent pour afficher les message
             setTimeout(() => {
-                if (response.data.pastriesWon === 0) {
-                    if (chancesLeft > 1) {
-                        setMessage('Perdu ! Réessayez.');
-                    } else if (chancesLeft === 1) {
-                        setMessage('Dommage, vous n\'avez plus de chance');
+                setChancesLeft(prevChancesLeft => {
+                    if (response.data.pastriesWon > 0) {
+                        setMessage(`Bravo ! Vous avez gagné ${response.data.pastriesWon} pâtisserie(s).`);
+                    } else {
+                        if (prevChancesLeft > 1) {
+                            setMessage('Perdu ! Réessayez.');
+                        } else if (prevChancesLeft === 1) {
+                            setMessage('Dommage, vous n\'avez plus de chance.');
+                        } else {
+                            setMessage('Plus de chances restantes.');
+                        }
                     }
-                }
-                setShowResults(true); 
+                    return prevChancesLeft - 1;
+                });
+                setShowResults(true);
             }, 3000); 
-
         } catch (error) {
             console.log(error);
             setMessage("Les dés n'ont pas pu être lancés..." + (error.response?.data?.message || error.message));
@@ -99,7 +103,7 @@ const GameView = () => {
                 });
             }, diceRef);
             return () => ctx.revert();
-        }, [value]); // S'assurer que l'effet ne s'exécute que lorsque value change
+        }, [value]); // S'assurer que l'effet ne s'exécute que lorsque `value` change
 
         return (
             <div className="dice" ref={diceRef}>
@@ -128,7 +132,6 @@ const GameView = () => {
                 <div className="results-container">
                     {pastriesWon > 0 && (
                         <div>
-                            <h3>Bravo tu as gagné la/les pâtisserie(s) suivante(s) :</h3>
                             {pastriesDetails.map((pastry) => (
                                 <div key={pastry.name} className="pastry">
                                     <img src={`/assets/${pastry.image}`} alt={pastry.name} style={{ width: '100px', height: '100px' }} />
