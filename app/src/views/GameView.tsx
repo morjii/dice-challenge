@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { deleteUser } from '../redux/User';
+import { DiceProps } from '../types/apiTypes';
 import gsap from 'gsap';
 import './GameView.css';
 
@@ -38,7 +39,7 @@ const GameView = () => {
 
     const rollDices = async () => {
         setLoading(true);
-        setShowResults(false); // Reset showResults when rolling new dice
+        setShowResults(false); // reset showResults au relancement des dés
         try {
             const response = await axios.get('http://localhost:3001/api/game/roll-dices', {
                 headers: {
@@ -51,11 +52,19 @@ const GameView = () => {
             setPastriesWon(response.data.pastriesWon);
             setPastriesDetails(response.data.pastriesDetails);
             setChancesLeft(prev => prev - 1);
-            setMessage(response.data.pastriesWon === 0 && chancesLeft <= 1 ? 'Dommage, tu n\'as plus de chance' : '');
-            
+
+            // Delay the setting of the message until after the dice animation
             setTimeout(() => {
-                setShowResults(true); // Show results after animation
-            }, 3000); // Adjust the delay based on the animation duration
+                if (response.data.pastriesWon === 0) {
+                    if (chancesLeft > 1) {
+                        setMessage('Perdu ! Réessayez.');
+                    } else if (chancesLeft === 1) {
+                        setMessage('Dommage, vous n\'avez plus de chance');
+                    }
+                }
+                setShowResults(true); 
+            }, 3000); // Set message and show results after animation
+
         } catch (error) {
             console.log(error);
             setMessage("Les dés n'ont pas pu être lancés..." + (error.response?.data?.message || error.message));
@@ -76,8 +85,8 @@ const GameView = () => {
         }
     }
 
-    const Dice = React.memo(({ value }) => {
-        const diceRef = useRef(null);
+    const Dice: React.FC<DiceProps> = React.memo(({ value }) => {
+        const diceRef = useRef<HTMLDivElement>(null);
 
         useLayoutEffect(() => {
             const ctx = gsap.context(() => {
@@ -124,6 +133,7 @@ const GameView = () => {
                                     <p>{pastry.name}</p>
                                 </div>
                             ))}
+                            <h4>Tu receveras un mail pour récupérer ton gain ! </h4>
                         </div>
                     )}
                 </div>

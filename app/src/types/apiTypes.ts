@@ -7,11 +7,16 @@ export interface Pastry {
   id: string;
   name: string;
   image: string;
-  stock: number;  // Assurez-vous que le stock est bien géré dans votre modèle MongoDB
+  stock: number; 
 }
 
 export interface Winner {
   user: User;
   pastries: Pastry[];
   winDate: string;
+  date: Date; 
+}
+
+export interface DiceProps {
+  value: number;
 }

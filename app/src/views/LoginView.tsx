@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../redux/User'
+import './LoginView.css';
 
 const LoginView: React.FC = () => {
     const [email, setEmail] = useState<string>('');
