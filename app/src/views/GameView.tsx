@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { deleteUser } from '../redux/User';
 import { DiceProps } from '../types/apiTypes';
+
 import gsap from 'gsap';
 import './GameView.css';
 
@@ -16,6 +17,7 @@ const GameView = () => {
     const [chancesLeft, setChancesLeft] = useState(3);
     const [message, setMessage] = useState('');
     const [showResults, setShowResults] = useState(false); 
+     const [animate, setAnimate] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -39,6 +41,7 @@ const GameView = () => {
 
     const rollDices = async () => {
         setLoading(true);
+        setAnimate(true);  
         setShowResults(false); // Reset showResults quand on lance de nouveaux dés
         try {
             const response = await axios.get('http://localhost:3001/api/game/roll-dices', {
@@ -51,24 +54,23 @@ const GameView = () => {
             setResult(response.data.result);
             setPastriesWon(response.data.pastriesWon);
             setPastriesDetails(response.data.pastriesDetails);
+            // décrémenter les chances
             setChancesLeft(prev => prev - 1);
 
-            // attendre que l'animation se finissent pour afficher les message
+            // attendre que l'animation se finisse pour afficher les message
             setTimeout(() => {
-                setChancesLeft(prevChancesLeft => {
-                    if (response.data.pastriesWon > 0) {
-                        setMessage(`Bravo ! Vous avez gagné ${response.data.pastriesWon} pâtisserie(s).`);
-                    } else {
-                        if (prevChancesLeft > 1) {
+                if (response.data.pastriesWon > 0) {
+                    setMessage(`Bravo ! Vous avez gagné ${response.data.pastriesWon} pâtisserie(s).`);
+                } else {
+                    setChancesLeft(prevChancesLeft => {
+                        if (prevChancesLeft > 0) {
                             setMessage('Perdu ! Réessayez.');
-                        } else if (prevChancesLeft === 1) {
-                            setMessage('Dommage, vous n\'avez plus de chance.');
                         } else {
-                            setMessage('Plus de chances restantes.');
+                            setMessage('Dommage .. Plus de chances restantes.');
                         }
-                    }
-                    return prevChancesLeft - 1;
-                });
+                        return prevChancesLeft; 
+                    });
+                }
                 setShowResults(true);
             }, 3000); 
         } catch (error) {
@@ -76,6 +78,9 @@ const GameView = () => {
             setMessage("Les dés n'ont pas pu être lancés..." + (error.response?.data?.message || error.message));
         } finally {
             setLoading(false);
+            setTimeout(() => {
+                setAnimate(false);  // Arrêter l'animation après un délai
+            }, 3000);
         }
     };
 
@@ -95,16 +100,18 @@ const GameView = () => {
         const diceRef = useRef<HTMLDivElement>(null);
 
         useLayoutEffect(() => {
-            const ctx = gsap.context(() => {
-                gsap.from(diceRef.current, {
-                    rotationX: 'random(720, 1080)',
-                    rotationY: 'random(720, 1080)',
-                    duration: 'random(2, 3)'
-                });
-            }, diceRef);
-            return () => ctx.revert();
-        }, [value]); // S'assurer que l'effet ne s'exécute que lorsque `value` change
-
+            if (animate && value !== 0) {  // Ne déclencher l'animation que si la valeur n'est pas 0
+                const ctx = gsap.context(() => {
+                    gsap.from(diceRef.current, {
+                        rotationX: gsap.utils.random(720, 1080),
+                        rotationY: gsap.utils.random(720, 1080),
+                        duration: gsap.utils.random(2, 3)
+                    });
+                }, diceRef);
+                return () => ctx.revert();
+            }
+        }, [value, animate]);
+    
         return (
             <div className="dice" ref={diceRef}>
                 {[value, ...gsap.utils.shuffle([1, 2, 3, 4, 5, 6].filter(v => v !== value))].map((face, index) => (
