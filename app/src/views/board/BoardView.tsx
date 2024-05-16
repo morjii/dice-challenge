@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Winner } from '../../types/apiTypes';
+import { Winner2 } from '../../types/apiTypes';
+
 
 const BoardView: React.FC = () => {
-    const [winners, setWinners] = useState<Winner[]>([]);
+    const [winners, setWinners] = useState<Winner2[]>([]);
 
     useEffect(() => {
         fetch('http://localhost:3001/board')
@@ -28,7 +29,7 @@ const BoardView: React.FC = () => {
                                 </div>
                                 <div className="card-body">
                                     <p className="card-text">Date de victoire: {new Date(winner.date).toLocaleDateString()}</p>
-                                    <p className="card-text">Pâtisserie(s) gagnée(s): {winner.pastry.join(", ")}</p>
+                                    <p className="card-text">Pâtisserie(s) gagnée(s): {winner.pastry?.join(", ")}</p>
                                 </div>
                             </div>
                         </div>

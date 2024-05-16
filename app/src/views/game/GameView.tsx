@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { deleteUser } from '../../redux/User';
-import { DiceProps } from '../../types/apiTypes';
+import { DiceProps, Pastry } from '../../types/apiTypes';
 
 import gsap from 'gsap';
 import './GameView.css';
@@ -13,7 +13,7 @@ const GameView = () => {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState('');
     const [pastriesWon, setPastriesWon] = useState(0);
-    const [pastriesDetails, setPastriesDetails] = useState([]);
+    const [pastriesDetails, setPastriesDetails] = useState<Pastry[]>([]);
     const [chancesLeft, setChancesLeft] = useState(3);
     const [message, setMessage] = useState('');
     const [showResults, setShowResults] = useState(false); 
@@ -54,6 +54,8 @@ const GameView = () => {
             setResult(response.data.result);
             setPastriesWon(response.data.pastriesWon);
             setPastriesDetails(response.data.pastriesDetails);
+            console.log('toto')
+            console.log(response.data.pastriesDetails)
             // décrémenter les chances
             setChancesLeft(prev => prev - 1);
 
