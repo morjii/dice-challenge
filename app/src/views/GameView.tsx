@@ -37,6 +37,8 @@ const GameView = () => {
         }
     };
 
+    //fonction get renvoie à l'api pour check les résultats des dés
+
     const rollDices = async () => {
         setLoading(true);
         setShowResults(false); // reset showResults au relancement des dés
@@ -53,7 +55,7 @@ const GameView = () => {
             setPastriesDetails(response.data.pastriesDetails);
             setChancesLeft(prev => prev - 1);
 
-            // Delay the setting of the message until after the dice animation
+            // afficher les résultats à la fin de l'animation
             setTimeout(() => {
                 if (response.data.pastriesWon === 0) {
                     if (chancesLeft > 1) {
@@ -63,7 +65,7 @@ const GameView = () => {
                     }
                 }
                 setShowResults(true); 
-            }, 3000); // Set message and show results after animation
+            }, 3000); 
 
         } catch (error) {
             console.log(error);
@@ -97,7 +99,7 @@ const GameView = () => {
                 });
             }, diceRef);
             return () => ctx.revert();
-        }, [value]); // S'assurer que l'effet ne s'exécute que lorsque `value` change
+        }, [value]); // S'assurer que l'effet ne s'exécute que lorsque value change
 
         return (
             <div className="dice" ref={diceRef}>
